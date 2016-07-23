@@ -1,6 +1,6 @@
 /*
  * Plugin Name: Vanilla Lazy Loading
- * Version: 0.1.1
+ * Version: 0.2.0
  * Plugin URL: https://github.com/Darklg/JavaScriptUtilities
  * JavaScriptUtilities Vanilla Fake Select may be freely distributed under the MIT license.
  */
@@ -57,6 +57,7 @@
                 if (!imgs_vll[i]) {
                     continue;
                 }
+                imgs_vll[i].type = imgs_vll[i].el.getAttribute('data-vlltype') ? imgs_vll[i].el.getAttribute('data-vlltype') : 'image';
                 imgs_vll[i].src = imgs_vll[i].el.getAttribute('data-vllsrc');
                 imgs_vll[i].top = imgs_vll[i].el.getBoundingClientRect().top;
             }
@@ -71,12 +72,19 @@
             if (imgs_vll[i].top > scrollTop) {
                 return false;
             }
-            // Update images position on load
-            imgs_vll[i].el.addEventListener('load', function(e) {
-                setImagesPosition();
-            }, 1);
-            // Load image source
-            imgs_vll[i].el.src = imgs_vll[i].src;
+            switch (imgs_vll[i].type) {
+                case 'background':
+                    // Load image background
+                    imgs_vll[i].el.style.backgroundImage = 'url(' + imgs_vll[i].src + ')';
+                    break;
+                default:
+                    // Update images position on load
+                    imgs_vll[i].el.addEventListener('load', function(e) {
+                        setImagesPosition();
+                    }, 1);
+                    // Load image source
+                    imgs_vll[i].el.src = imgs_vll[i].src;
+            }
             // Invalidate image
             imgs_vll[i] = false;
         }
