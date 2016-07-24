@@ -1,6 +1,6 @@
 /*
  * Plugin Name: Vanilla Lazy Loading
- * Version: 0.2.0
+ * Version: 0.3.0
  * Plugin URL: https://github.com/Darklg/JavaScriptUtilities
  * JavaScriptUtilities Vanilla Fake Select may be freely distributed under the MIT license.
  */
@@ -19,7 +19,8 @@
         var scrollTop = 0,
             offsetTop = 200,
             imgs_vll,
-            imgs;
+            imgs,
+            timeoutImgPosition;
 
         function init() {
             setImagesList();
@@ -30,7 +31,7 @@
         function setEvents() {
             scrollEvent();
             window.addEventListener('scroll', scrollEvent, 1);
-            window.addEventListener('resize', setImagesPosition, 1);
+            window.addEventListener('resize', timeoutImagesPosition, 1);
         }
 
         function scrollEvent() {
@@ -52,14 +53,21 @@
             }
         }
 
+        function timeoutImagesPosition() {
+            clearTimeout(timeoutImgPosition);
+            timeoutImgPosition = setTimeout(setImagesPosition, 100);
+        }
+
         function setImagesPosition() {
-            for (var i = 0, len = imgs_vll.length; i < len; i++) {
+            var tmpOffset, i, len;
+            for (i = 0, len = imgs_vll.length; i < len; i++) {
                 if (!imgs_vll[i]) {
                     continue;
                 }
+                tmpOffset = imgs_vll[i].el.getAttribute('data-vlloffset') ? parseInt(imgs_vll[i].el.getAttribute('data-vlloffset'), 10) : 0;
                 imgs_vll[i].type = imgs_vll[i].el.getAttribute('data-vlltype') ? imgs_vll[i].el.getAttribute('data-vlltype') : 'image';
                 imgs_vll[i].src = imgs_vll[i].el.getAttribute('data-vllsrc');
-                imgs_vll[i].top = imgs_vll[i].el.getBoundingClientRect().top;
+                imgs_vll[i].top = imgs_vll[i].el.getBoundingClientRect().top + tmpOffset;
             }
         }
 
@@ -79,9 +87,7 @@
                     break;
                 default:
                     // Update images position on load
-                    imgs_vll[i].el.addEventListener('load', function(e) {
-                        setImagesPosition();
-                    }, 1);
+                    imgs_vll[i].el.addEventListener('load', timeoutImagesPosition, 1);
                     // Load image source
                     imgs_vll[i].el.src = imgs_vll[i].src;
             }

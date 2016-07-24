@@ -17,3 +17,24 @@ Add the src of the image to lazy load in an attribute.
 ```
 
 ## How to adjust
+
+* `data-vlltype="background"` : Load the image as a background image.
+* `data-vlloffset="200"` : Element is viewed by the script 200px lower.
+
+
+
+## Changelog
+
+v 0.3.0 - 2016-07-24
+* Documentation \o/
+* Debounce on the resize and load action to avoid multiple reloads.
+* Offset can be defined on each item.
+
+v 0.2.0 — 2016-07-23
+* Load image in background if asked.
+
+v 0.1.1 — 2016-07-21
+* Fix invalid domready call.
+
+v 0.1 — 2016-07-21
+* Simple auto initializing lazy loading script.
