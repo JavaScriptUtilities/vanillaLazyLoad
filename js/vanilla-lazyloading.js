@@ -85,14 +85,32 @@
                     // Load image background
                     imgs_vll[i].el.style.backgroundImage = 'url(' + imgs_vll[i].src + ')';
                     break;
+                case 'none':
+                    // To avoid conflicts with the callback
+                    break;
                 default:
                     // Update images position on load
                     imgs_vll[i].el.addEventListener('load', timeoutImagesPosition, 1);
                     // Load image source
                     imgs_vll[i].el.src = imgs_vll[i].src;
             }
+
+            // Callback
+            triggerEvent(imgs_vll[i].el, 'vllload', imgs_vll[i]);
+
+            // Remove attribute
+            imgs_vll[i].el.removeAttribute('data-vllsrc');
+
             // Invalidate image
             imgs_vll[i] = false;
+        }
+
+        function triggerEvent(el, eventName, parameters) {
+            parameters = parameters || {};
+            var e = document.createEvent("HTMLEvents");
+            e.initEvent(eventName, true, false);
+            e.vllparams = parameters;
+            return el.dispatchEvent(e);
         }
 
         init();

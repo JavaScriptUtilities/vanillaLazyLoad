@@ -18,12 +18,14 @@ Add the src of the image to lazy load in an attribute.
 
 ## How to adjust
 
-* `data-vlltype="background"` : Load the image as a background image.
 * `data-vlloffset="200"` : Element is viewed by the script 200px lower.
-
-
+* `data-vlltype="background"` : Load the image as a background image.
+* `data-vlltype="none"` : Do nothing, and use the event "vllload" on the item to trigger your custom action.
 
 ## Changelog
+
+v 0.4.0 - 2016-07-25
+* Trigger a callback when image is loaded.
 
 v 0.3.0 - 2016-07-24
 * Documentation \o/
