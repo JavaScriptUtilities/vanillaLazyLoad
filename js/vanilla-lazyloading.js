@@ -1,6 +1,6 @@
 /*
  * Plugin Name: Vanilla Lazy Loading
- * Version: 0.3.0
+ * Version: 0.4.0
  * Plugin URL: https://github.com/Darklg/JavaScriptUtilities
  * JavaScriptUtilities Vanilla Fake Select may be freely distributed under the MIT license.
  */
