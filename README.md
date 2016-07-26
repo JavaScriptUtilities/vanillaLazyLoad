@@ -16,13 +16,20 @@ Add the src of the image to lazy load in an attribute.
 <img data-vllsrc="mybigimage.jpg" src="default.jpg" alt="" />
 ```
 
-## How to adjust
+## Settings by element
 
 * `data-vlloffset="200"` : Element is viewed by the script 200px lower.
 * `data-vlltype="background"` : Load the image as a background image.
 * `data-vlltype="none"` : Do nothing, and use the event "vllload" on the item to trigger your custom action.
 
+## Prevent autoload
+
+Just declare `window.preventAutoLoadVanillaLazyLoading = true` before domready.
+
 ## Changelog
+
+v 0.4.1 - 2016-07-26
+* Prevent autoload at will.
 
 v 0.4.0 - 2016-07-25
 * Trigger a callback when image is loaded.
