@@ -1,6 +1,6 @@
 /*
  * Plugin Name: Vanilla Lazy Loading
- * Version: 0.4.1
+ * Version: 0.5.0
  * Plugin URL: https://github.com/Darklg/JavaScriptUtilities
  * JavaScriptUtilities Vanilla Fake Select may be freely distributed under the MIT license.
  */
@@ -64,8 +64,24 @@ function vanillaLazyLoading() {
             }
             tmpOffset = imgs_vll[i].el.getAttribute('data-vlloffset') ? parseInt(imgs_vll[i].el.getAttribute('data-vlloffset'), 10) : 0;
             imgs_vll[i].type = imgs_vll[i].el.getAttribute('data-vlltype') ? imgs_vll[i].el.getAttribute('data-vlltype') : 'image';
+            imgs_vll[i].classname = imgs_vll[i].el.getAttribute('data-vllclassname') ? imgs_vll[i].el.getAttribute('data-vllclassname') : '';
             imgs_vll[i].src = imgs_vll[i].el.getAttribute('data-vllsrc');
             imgs_vll[i].top = imgs_vll[i].el.getBoundingClientRect().top + tmpOffset;
+            imgs_vll[i].target = imgs_vll[i].el;
+            if (imgs_vll[i].el.getAttribute('data-vlltarget')) {
+                switch (imgs_vll[i].el.getAttribute('data-vlltarget')) {
+                    case 'parent':
+                        imgs_vll[i].target = imgs_vll[i].el.parentNode;
+                        break;
+                    case 'child':
+                        if (imgs_vll[i].el.childNodes[0]) {
+                            imgs_vll[i].target = imgs_vll[i].el.childNodes[0];
+                        }
+                        break;
+                    default:
+
+                }
+            }
         }
     }
 
@@ -81,16 +97,19 @@ function vanillaLazyLoading() {
         switch (imgs_vll[i].type) {
             case 'background':
                 // Load image background
-                imgs_vll[i].el.style.backgroundImage = 'url(' + imgs_vll[i].src + ')';
+                imgs_vll[i].target.style.backgroundImage = 'url(' + imgs_vll[i].src + ')';
                 break;
             case 'none':
                 // To avoid conflicts with the callback
                 break;
+            case 'classname':
+                imgs_vll[i].target.className = imgs_vll[i].target.className + ' ' + imgs_vll[i].classname;
+                break;
             default:
                 // Update images position on load
-                imgs_vll[i].el.addEventListener('load', timeoutImagesPosition, 1);
+                imgs_vll[i].target.addEventListener('load', timeoutImagesPosition, 1);
                 // Load image source
-                imgs_vll[i].el.src = imgs_vll[i].src;
+                imgs_vll[i].target.src = imgs_vll[i].src;
         }
 
         // Callback

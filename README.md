@@ -19,7 +19,13 @@ Add the src of the image to lazy load in an attribute.
 ## Settings by element
 
 * `data-vlloffset="200"` : Element is viewed by the script 200px lower.
+* `data-vlltarget="parent"` : Changes are applied on the parent.
+* `data-vlltarget="child"` : Changes are applied on the child.
+* `data-vllclassname="myclassname"` : Class name applied on the child.
+
+### Type
 * `data-vlltype="background"` : Load the image as a background image.
+* `data-vlltype="classname"` : Add a classname on the element.
 * `data-vlltype="none"` : Do nothing, and use the event "vllload" on the item to trigger your custom action.
 
 ## Prevent autoload
@@ -27,6 +33,10 @@ Add the src of the image to lazy load in an attribute.
 Just declare `window.preventAutoLoadVanillaLazyLoading = true` before domready.
 
 ## Changelog
+
+v 0.5.0 - 2016-09-19
+* Choose parent or child as a target.
+* Add a classname on target element.
 
 v 0.4.1 - 2016-07-26
 * Prevent autoload at will.

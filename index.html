@@ -3,13 +3,16 @@
 <head>
 <meta charset="UTF-8" />
 <title>JavaScript Utilities - Vanilla Lazy Loading</title>
-<script src="js/vanilla-lazyloading.js?v=0.4.1"></script>
+<script src="js/vanilla-lazyloading.js?v=0.5.0"></script>
+<style>.outred{outline: 1px solid red;}</style>
 </head>
 <body class="demo-scrollanim">
 <h1>JavaScript Utilities - Vanilla Lazy Loading</h1>
 <img data-vllsrc="images/image-1.jpg" alt="" />
 <div style="height:1000px;"></div>
-<div style="height:200px;" data-vllsrc="images/image-2.jpg" data-vlltype="background" alt=""></div>
+<div style="height:200px;" data-vllsrc="images/image-2.jpg" data-vlltype="background"></div>
+<div style="height:1000px;"></div>
+<div style="height:200px;" data-vllsrc="none" data-vlltype="classname" data-vllclassname="outred">az</div>
 <div style="height:1000px;"></div>
 <div style="height:100px;background-color:#E0E0E0;line-height:100px;">100px</div>
 <img data-vllsrc="images/image-3.jpg" alt="" />
