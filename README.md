@@ -24,15 +24,31 @@ Add the src of the image to lazy load in an attribute.
 * `data-vllclassname="myclassname"` : Class name applied on the child.
 
 ### Type
+
 * `data-vlltype="background"` : Load the image as a background image.
 * `data-vlltype="classname"` : Add a classname on the element.
 * `data-vlltype="none"` : Do nothing, and use the event "vllload" on the item to trigger your custom action.
+
+## Action Children
+
+Load child images when interacting with items (mousemove, touchstart, click).
+
+```html
+<div style="height:100px;" data-vllactionchildren="1">
+    <img data-vllactionsrc="images/image-1.jpg" alt="" />
+    <img data-vllactionsrc="images/image-2.jpg" alt="" />
+    <img data-vllactionsrc="images/image-3.jpg" alt="" />
+</div>
+```
 
 ## Prevent autoload
 
 Just declare `window.preventAutoLoadVanillaLazyLoading = true` before domready.
 
 ## Changelog
+
+v 0.6.0 - 2016-11-20
+* Action children : load child images when interacting with items.
 
 v 0.5.0 - 2016-09-19
 * Choose parent or child as a target.
