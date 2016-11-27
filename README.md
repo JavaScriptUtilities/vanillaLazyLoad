@@ -22,6 +22,7 @@ Add the src of the image to lazy load in an attribute.
 * `data-vlltarget="parent"` : Changes are applied on the parent.
 * `data-vlltarget="child"` : Changes are applied on the child.
 * `data-vllclassname="myclassname"` : Class name applied on the child.
+* `data-vllblanksrc="1"` : Add a default square transparent image (in data-url) to avoid layout bugs.
 
 ### Type
 
@@ -46,6 +47,9 @@ Load child images when interacting with items (mousemove, touchstart, click).
 Just declare `window.preventAutoLoadVanillaLazyLoading = true` before domready.
 
 ## Changelog
+
+v 0.7.0 - 2016-11-27
+* Add a default blank image.
 
 v 0.6.0 - 2016-11-20
 * Action children : load child images when interacting with items.
