@@ -1,6 +1,6 @@
 /*
  * Plugin Name: Vanilla Lazy Loading
- * Version: 0.7/0
+ * Version: 0.7.1
  * Plugin URL: https://github.com/Darklg/JavaScriptUtilities
  * JavaScriptUtilities Vanilla Fake Select may be freely distributed under the MIT license.
  */
@@ -84,6 +84,7 @@ function vanillaLazyLoading() {
         var tmp_img = document.querySelectorAll('[data-vllblanksrc]');
         for (var i = 0, len = tmp_img.length; i < len; i++) {
              tmp_img[i].removeAttribute('data-vllblanksrc');
+             tmp_img[i].setAttribute('data-vllblanksrcactive', 1);
              tmp_img[i].src = blankSrc;
         }
     }
@@ -162,6 +163,8 @@ function vanillaLazyLoading() {
                 // Load image source
                 img.target.src = img.src;
         }
+
+        img.el.removeAttribute('data-vllblanksrcactive');
 
         // Callback
         triggerEvent(img.el, 'vllload', img);

@@ -48,6 +48,9 @@ Just declare `window.preventAutoLoadVanillaLazyLoading = true` before domready.
 
 ## Changelog
 
+v 0.7.1 - 2016-11-29
+* Add properties during blank image use.
+
 v 0.7.0 - 2016-11-27
 * Add a default blank image.
 
