@@ -46,7 +46,24 @@ Load child images when interacting with items (mousemove, touchstart, click).
 
 Just declare `window.preventAutoLoadVanillaLazyLoading = true` before domready.
 
+## Global settings.
+
+```javascript
+window.preventAutoLoadVanillaLazyLoading = true;
+new vanillaLazyLoading({
+    // Action event with mouse : at least 4 mousemoves in a 50ms span.
+    actionEventMouseMoves: 4,
+    actionEventMouseTimeout: 50
+});
+```
+
 ## Changelog
+
+v 0.8.0 - 2017-02-16
+* Fix demo.
+* Add global options.
+* Invert offset logic.
+* Add a small timeout for action event on mousemove.
 
 v 0.7.1 - 2016-11-29
 * Add properties during blank image use.

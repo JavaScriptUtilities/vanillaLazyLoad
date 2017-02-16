@@ -1,25 +1,31 @@
 /*
  * Plugin Name: Vanilla Lazy Loading
- * Version: 0.7.1
+ * Version: 0.8.0
  * Plugin URL: https://github.com/Darklg/JavaScriptUtilities
  * JavaScriptUtilities Vanilla Fake Select may be freely distributed under the MIT license.
  */
 
 /* jshint browser: true */
 
-function vanillaLazyLoading() {
+function vanillaLazyLoading(options) {
     'use strict';
 
     if (!document.querySelectorAll) {
         return false;
     }
 
-    var scrollTop = 0,
-        offsetTop = 200,
-        blankSrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAEElEQVQY02P4jxcwjEpjAwD6HirkMLPt9gAAAABJRU5ErkJggg==',
+    if (!options || typeof options != 'object') {
+        options = {};
+    }
+
+    var offsetTop = options.offsetTop || 200,
+        actionEventMouseTimeout = options.actionEventMouseTimeout || 50,
+        actionEventMouseMoves = options.actionEventMouseMoves || 5,
+        blankSrc = options.blankSrc || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAEElEQVQY02P4jxcwjEpjAwD6HirkMLPt9gAAAABJRU5ErkJggg==',
         imgs_vll,
         imgs_actionchildren,
         imgs,
+        scrollTop = 0,
         timeoutImgPosition;
 
     function init() {
@@ -34,16 +40,53 @@ function vanillaLazyLoading() {
         window.addEventListener('scroll', scrollEvent, 1);
         window.addEventListener('resize', timeoutImagesPosition, 1);
         for (var i = 0, len = imgs_actionchildren.length; i < len; i++) {
-            imgs_actionchildren[i].addEventListener('mousemove', actionEvent, 1);
+            imgs_actionchildren[i].addEventListener('mousemove', actionEventMouse, 1);
             imgs_actionchildren[i].addEventListener('touchstart', actionEvent, 1);
             imgs_actionchildren[i].addEventListener('click', actionEvent, 1);
         }
     }
 
+    /* N mousemoves in Xms -> action event */
+    function actionEventMouse() {
+        /*jshint validthis: true */
+
+        /* No dataset support */
+        if (!this.dataset) {
+            actionEvent.call(this);
+            return;
+        }
+
+        this.dataset.actioneventmousetimeout = this.dataset.actioneventmousetimeout || actionEventMouseTimeout;
+        this.dataset.actioneventmousemoves = this.dataset.actioneventmousemoves || actionEventMouseMoves;
+
+        /* First passage */
+        if (!this.dataset.vllcounter) {
+
+            /* - start counter */
+            (function(self) {
+                self.dataset.vllcounter = 1;
+                /* - stop counting after X ms */
+                self.dataset.vllcountertimeout = setTimeout(function() {
+                    self.dataset.vllcounter = 0;
+                    clearTimeout(self.dataset.vllcountertimeout);
+                }, self.dataset.actioneventmousetimeout);
+            }(this));
+        }
+        /* Else : count as a view */
+        else {
+            this.dataset.vllcounter++;
+            if (this.dataset.vllcounter >= this.dataset.actioneventmousemoves) {
+                clearTimeout(this.dataset.vllcountertimeout);
+                actionEvent.call(this);
+            }
+        }
+
+    }
+
     function actionEvent() {
         /*jshint validthis: true */
         /* Launch only once */
-        this.removeEventListener('mousemove', actionEvent, 1);
+        this.removeEventListener('mousemove', actionEventMouse, 1);
         this.removeEventListener('touchstart', actionEvent, 1);
         this.removeEventListener('click', actionEvent, 1);
         /* Load images */
@@ -83,9 +126,9 @@ function vanillaLazyLoading() {
     function setImagesInitBlank() {
         var tmp_img = document.querySelectorAll('[data-vllblanksrc]');
         for (var i = 0, len = tmp_img.length; i < len; i++) {
-             tmp_img[i].removeAttribute('data-vllblanksrc');
-             tmp_img[i].setAttribute('data-vllblanksrcactive', 1);
-             tmp_img[i].src = blankSrc;
+            tmp_img[i].removeAttribute('data-vllblanksrc');
+            tmp_img[i].setAttribute('data-vllblanksrcactive', 1);
+            tmp_img[i].src = blankSrc;
         }
     }
 
@@ -108,7 +151,7 @@ function vanillaLazyLoading() {
         img.type = img.el.getAttribute('data-vlltype') ? img.el.getAttribute('data-vlltype') : 'image';
         img.classname = img.el.getAttribute('data-vllclassname') ? img.el.getAttribute('data-vllclassname') : '';
         img.src = img.el.getAttribute(attrSrc);
-        img.top = img.el.getBoundingClientRect().top + tmpOffset;
+        img.top = img.el.getBoundingClientRect().top - tmpOffset;
         img.target = img.el;
         if (img.el.getAttribute('data-vlltarget')) {
             switch (img.el.getAttribute('data-vlltarget')) {
