@@ -59,6 +59,10 @@ new vanillaLazyLoading({
 
 ## Changelog
 
+v 0.9.0 - 2017-10-15
+* Smaller default image.
+* Smaller Minified JS.
+
 v 0.8.0 - 2017-02-16
 * Fix demo.
 * Add global options.

@@ -1,6 +1,6 @@
 /*
  * Plugin Name: Vanilla Lazy Loading
- * Version: 0.8.0
+ * Version: 0.9.0
  * Plugin URL: https://github.com/Darklg/JavaScriptUtilities
  * JavaScriptUtilities Vanilla Fake Select may be freely distributed under the MIT license.
  */
@@ -21,12 +21,23 @@ function vanillaLazyLoading(options) {
     var offsetTop = options.offsetTop || 200,
         actionEventMouseTimeout = options.actionEventMouseTimeout || 50,
         actionEventMouseMoves = options.actionEventMouseMoves || 5,
-        blankSrc = options.blankSrc || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAEElEQVQY02P4jxcwjEpjAwD6HirkMLPt9gAAAABJRU5ErkJggg==',
+        blankSrc = options.blankSrc || 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
         imgs_vll,
         imgs_actionchildren,
         imgs,
         scrollTop = 0,
         timeoutImgPosition;
+
+    /* Attributes */
+    var attrActionChildren = 'data-vllactionchildren',
+        attrActionSrc = 'data-vllactionsrc',
+        attrBlankSrc = 'data-vllblanksrc',
+        attrBlankSrcActive = 'data-vllblanksrcactive',
+        attrClassname = 'data-vllclassname',
+        attrMainSrc = 'data-vllsrc',
+        attrOffset = 'data-vlloffset',
+        attrTarget = 'data-vlltarget',
+        attrType = 'data-vlltype';
 
     function init() {
         setImagesList();
@@ -50,33 +61,39 @@ function vanillaLazyLoading(options) {
     function actionEventMouse() {
         /*jshint validthis: true */
 
+        var actionEventTimeoutProp = 'actioneventmousetimeout',
+            actionEventMoveProp = 'actioneventmousemoves',
+            counterProp = 'vllcounter',
+            counterTimeoutProp = 'vllcountertimeout',
+            datasetProp = 'dataset';
+
         /* No dataset support */
-        if (!this.dataset) {
+        if (!this[datasetProp]) {
             actionEvent.call(this);
             return;
         }
 
-        this.dataset.actioneventmousetimeout = this.dataset.actioneventmousetimeout || actionEventMouseTimeout;
-        this.dataset.actioneventmousemoves = this.dataset.actioneventmousemoves || actionEventMouseMoves;
+        this[datasetProp][actionEventTimeoutProp] = this[datasetProp][actionEventTimeoutProp] || actionEventMouseTimeout;
+        this[datasetProp][actionEventMoveProp] = this[datasetProp][actionEventMoveProp] || actionEventMouseMoves;
 
         /* First passage */
-        if (!this.dataset.vllcounter) {
+        if (!this[datasetProp][counterProp]) {
 
             /* - start counter */
             (function(self) {
-                self.dataset.vllcounter = 1;
+                self[datasetProp][counterProp] = 1;
                 /* - stop counting after X ms */
-                self.dataset.vllcountertimeout = setTimeout(function() {
-                    self.dataset.vllcounter = 0;
-                    clearTimeout(self.dataset.vllcountertimeout);
-                }, self.dataset.actioneventmousetimeout);
+                self[datasetProp][counterTimeoutProp] = setTimeout(function() {
+                    self[datasetProp][counterProp] = 0;
+                    clearTimeout(self[datasetProp][counterTimeoutProp]);
+                }, self[datasetProp][actionEventTimeoutProp]);
             }(this));
         }
         /* Else : count as a view */
         else {
-            this.dataset.vllcounter++;
-            if (this.dataset.vllcounter >= this.dataset.actioneventmousemoves) {
-                clearTimeout(this.dataset.vllcountertimeout);
+            this[datasetProp][counterProp]++;
+            if (this[datasetProp][counterProp] >= this[datasetProp][actionEventMoveProp]) {
+                clearTimeout(this[datasetProp][counterTimeoutProp]);
                 actionEvent.call(this);
             }
         }
@@ -90,14 +107,14 @@ function vanillaLazyLoading(options) {
         this.removeEventListener('touchstart', actionEvent, 1);
         this.removeEventListener('click', actionEvent, 1);
         /* Load images */
-        var imgs = this.querySelectorAll('[data-vllactionsrc]'),
+        var imgs = this.querySelectorAll('[' + attrActionSrc + ']'),
             imgTmp;
         for (var i = 0, len = imgs.length; i < len; i++) {
             /* Set image */
             imgTmp = {
                 el: imgs[i]
             };
-            setImagePosition(imgTmp, 'data-vllactionsrc');
+            setImagePosition(imgTmp, attrActionSrc);
             /* Load it */
             loadImage(imgTmp);
         }
@@ -113,21 +130,21 @@ function vanillaLazyLoading(options) {
     function setImagesList() {
         var tmp_img;
         imgs_vll = [];
-        imgs = document.querySelectorAll('[data-vllsrc]');
+        imgs = document.querySelectorAll('[' + attrMainSrc + ']');
         for (var i = 0, len = imgs.length; i < len; i++) {
             tmp_img = {
                 el: imgs[i]
             };
             imgs_vll.push(tmp_img);
         }
-        imgs_actionchildren = document.querySelectorAll('[data-vllactionchildren]');
+        imgs_actionchildren = document.querySelectorAll('[' + attrActionChildren + ']');
     }
 
     function setImagesInitBlank() {
-        var tmp_img = document.querySelectorAll('[data-vllblanksrc]');
+        var tmp_img = document.querySelectorAll('[' + attrBlankSrc + ']');
         for (var i = 0, len = tmp_img.length; i < len; i++) {
-            tmp_img[i].removeAttribute('data-vllblanksrc');
-            tmp_img[i].setAttribute('data-vllblanksrcactive', 1);
+            tmp_img[i].removeAttribute(attrBlankSrc);
+            tmp_img[i].setAttribute(attrBlankSrcActive, 1);
             tmp_img[i].src = blankSrc;
         }
     }
@@ -142,19 +159,19 @@ function vanillaLazyLoading(options) {
             if (!imgs_vll[i]) {
                 continue;
             }
-            setImagePosition(imgs_vll[i], 'data-vllsrc');
+            setImagePosition(imgs_vll[i], attrMainSrc);
         }
     }
 
     function setImagePosition(img, attrSrc) {
-        var tmpOffset = img.el.getAttribute('data-vlloffset') ? parseInt(img.el.getAttribute('data-vlloffset'), 10) : 0;
-        img.type = img.el.getAttribute('data-vlltype') ? img.el.getAttribute('data-vlltype') : 'image';
-        img.classname = img.el.getAttribute('data-vllclassname') ? img.el.getAttribute('data-vllclassname') : '';
+        var tmpOffset = img.el.getAttribute(attrOffset) ? parseInt(img.el.getAttribute(attrOffset), 10) : 0;
+        img.type = img.el.getAttribute(attrType) ? img.el.getAttribute(attrType) : 'image';
+        img.classname = img.el.getAttribute(attrClassname) ? img.el.getAttribute(attrClassname) : '';
         img.src = img.el.getAttribute(attrSrc);
         img.top = img.el.getBoundingClientRect().top - tmpOffset;
         img.target = img.el;
-        if (img.el.getAttribute('data-vlltarget')) {
-            switch (img.el.getAttribute('data-vlltarget')) {
+        if (img.el.getAttribute(attrTarget)) {
+            switch (img.el.getAttribute(attrTarget)) {
                 case 'parent':
                     img.target = img.el.parentNode;
                     break;
@@ -182,7 +199,7 @@ function vanillaLazyLoading(options) {
         loadImage(imgs_vll[i]);
 
         // Remove attribute
-        imgs_vll[i].el.removeAttribute('data-vllsrc');
+        imgs_vll[i].el.removeAttribute(attrMainSrc);
 
         // Invalidate image
         imgs_vll[i] = false;
@@ -207,7 +224,7 @@ function vanillaLazyLoading(options) {
                 img.target.src = img.src;
         }
 
-        img.el.removeAttribute('data-vllblanksrcactive');
+        img.el.removeAttribute(attrBlankSrcActive);
 
         // Callback
         triggerEvent(img.el, 'vllload', img);
@@ -225,7 +242,10 @@ function vanillaLazyLoading(options) {
 }
 
 (function autoLoadVanillaLazyLoading() {
-    if (window.preventAutoLoadVanillaLazyLoading) {
+    'use strict';
+
+    var attributePrevent = 'preventAutoLoadVanillaLazyLoading';
+    if (window[attributePrevent]) {
         return false;
     }
 
@@ -243,7 +263,7 @@ function vanillaLazyLoading(options) {
 
     /* Launch LL at domready */
     domReady(function() {
-        if (window.preventAutoLoadVanillaLazyLoading) {
+        if (window[attributePrevent]) {
             return false;
         }
         vanillaLazyLoading();
