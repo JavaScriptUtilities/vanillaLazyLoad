@@ -59,6 +59,10 @@ new vanillaLazyLoading({
 
 ## Changelog
 
+v 0.10.0 - 2017-12-16
+* Add a custom event to trigger action children.
+* Better example for action children.
+
 v 0.9.0 - 2017-10-15
 * Smaller default image.
 * Smaller Minified JS.

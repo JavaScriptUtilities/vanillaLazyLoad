@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <title>JavaScript Utilities - Vanilla Lazy Loading</title>
-<script src="js/vanilla-lazyloading.min.js?v=0.9.0"></script>
+<script src="js/vanilla-lazyloading.min.js?v=0.10.0"></script>
 <style>.outred{outline: 1px solid red;}</style>
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
@@ -13,7 +13,7 @@
 <div style="height:1000px;"></div>
 <div style="height:200px;" data-vlloffset="100" data-vllsrc="images/image-2.jpg" data-vlltype="background"></div>
 <div style="height:1000px;"></div>
-<div style="border: 1px solid #F0F0F0;" data-vllactionchildren="1">
+<div id="test" style="border: 1px solid #F0F0F0;display:inline-block;" data-vllactionchildren="1">
     <span>Click or move your mouse here</span><br />
     <img data-vllactionsrc="images/image-1.jpg" alt="" />
     <img data-vllactionsrc="images/image-2.jpg" alt="" />
