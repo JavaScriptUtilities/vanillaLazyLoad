@@ -1,6 +1,6 @@
 /*
  * Plugin Name: Vanilla Lazy Loading
- * Version: 0.10.0
+ * Version: 0.11.0
  * Plugin URL: https://github.com/Darklg/JavaScriptUtilities
  * JavaScriptUtilities Vanilla Fake Select may be freely distributed under the MIT license.
  */
@@ -37,8 +37,10 @@ function vanillaLazyLoading(options) {
         attrMainSrc = 'data-vllsrc',
         attrOffset = 'data-vlloffset',
         attrTarget = 'data-vlltarget',
+        attrSrcLoaded = 'data-vllwaitforload',
         attrType = 'data-vlltype';
 
+    /* Events */
     var eventLoadActionChildren = 'loadvllactionchildren';
 
     function init() {
@@ -120,7 +122,7 @@ function vanillaLazyLoading(options) {
             };
             setImagePosition(imgTmp, attrActionSrc);
             /* Load it */
-            loadImage(imgTmp);
+            loadImageAsync(imgTmp);
         }
     }
 
@@ -200,13 +202,25 @@ function vanillaLazyLoading(options) {
             return false;
         }
 
-        loadImage(imgs_vll[i]);
+        loadImageAsync(imgs_vll[i]);
 
         // Remove attribute
         imgs_vll[i].el.removeAttribute(attrMainSrc);
 
         // Invalidate image
         imgs_vll[i] = false;
+    }
+
+    function loadImageAsync(img) {
+        if (img.el.getAttribute(attrSrcLoaded) == '1') {
+            callOnImgLoad(img.src, function() {
+                loadImage(img);
+                img.el.removeAttribute(attrSrcLoaded);
+            });
+        }
+        else {
+            loadImage(img);
+        }
     }
 
     function loadImage(img) {
@@ -240,6 +254,17 @@ function vanillaLazyLoading(options) {
         e.initEvent(eventName, true, false);
         e.vllparams = parameters;
         return el.dispatchEvent(e);
+    }
+
+    function callOnImgLoad(url, callback) {
+        // Create a new image
+        var img = new Image();
+
+        // Trigger callback on load
+        img.onload = callback;
+
+        // Set image load
+        img.src = url;
     }
 
     init();

@@ -23,6 +23,7 @@ Add the src of the image to lazy load in an attribute.
 * `data-vlltarget="child"` : Changes are applied on the child.
 * `data-vllclassname="myclassname"` : Class name applied on the child.
 * `data-vllblanksrc="1"` : Add a default square transparent image (in data-url) to avoid layout bugs.
+* `data-vllwaitforload="1"` : Replace src only when the new image is fully loaded.
 
 ### Type
 
@@ -58,6 +59,9 @@ new vanillaLazyLoading({
 ```
 
 ## Changelog
+
+v 0.11.0 - 2018-01-19
+* Add a new attribute to replace src only when the new image is fully loaded.
 
 v 0.10.0 - 2017-12-16
 * Add a custom event to trigger action children.

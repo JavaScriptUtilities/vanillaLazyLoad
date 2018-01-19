@@ -3,16 +3,20 @@
 <head>
 <meta charset="UTF-8" />
 <title>JavaScript Utilities - Vanilla Lazy Loading</title>
-<script src="js/vanilla-lazyloading.min.js?v=0.10.0"></script>
+<script src="js/vanilla-lazyloading.min.js?v=0.11.0"></script>
 <style>.outred{outline: 1px solid red;}</style>
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
 <body class="demo-scrollanim">
 <h1>JavaScript Utilities - Vanilla Lazy Loading</h1>
+<!-- Basic item -->
 <img data-vllsrc="images/image-1.jpg" alt="" />
 <div style="height:1000px;"></div>
+<!-- Background with offset -->
+<div style="height:100px;background-color:#E0E0E0;line-height:100px;">100px</div>
 <div style="height:200px;" data-vlloffset="100" data-vllsrc="images/image-2.jpg" data-vlltype="background"></div>
 <div style="height:1000px;"></div>
+<!-- Action children -->
 <div id="test" style="border: 1px solid #F0F0F0;display:inline-block;" data-vllactionchildren="1">
     <span>Click or move your mouse here</span><br />
     <img data-vllactionsrc="images/image-1.jpg" alt="" />
@@ -20,9 +24,27 @@
     <img data-vllactionsrc="images/image-3.jpg" alt="" />
 </div>
 <div style="height:1000px;"></div>
+<!-- Custom event -->
 <div style="height:200px;" data-vllsrc="none" data-vlltype="classname" data-vllclassname="outred">A classname is added when scroll position is reached : the border should be red</div>
 <div style="height:1000px;"></div>
-<div style="height:100px;background-color:#E0E0E0;line-height:100px;">100px</div>
+<!-- Simple image -->
 <img data-vllsrc="images/image-3.jpg" alt="" />
+<div style="height:1000px;"></div>
+<!-- Example when waiting for load to replace image -->
+<style>
+img.haswaitforload {
+    display: block;
+    width: 100%;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+img[data-vllwaitforload="1"] {
+    outline: 1px solid #fff;
+    -webkit-filter: blur(10px);
+    filter: blur(10px);
+}
+</style>
+<img class="haswaitforload" data-vllsrc="http://placehold.it/1001x100" src="http://placehold.it/100x10" data-vllwaitforload="1" alt="" />
 </body>
 </html>
