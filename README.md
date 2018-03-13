@@ -60,6 +60,9 @@ new vanillaLazyLoading({
 
 ## Changelog
 
+v 0.12.0 - 2018-03-13
+* Add a new attribute for responsive images.
+
 v 0.11.0 - 2018-01-19
 * Add a new attribute to replace src only when the new image is fully loaded.
 

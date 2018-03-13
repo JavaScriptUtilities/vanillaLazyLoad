@@ -1,6 +1,6 @@
 /*
  * Plugin Name: Vanilla Lazy Loading
- * Version: 0.11.0
+ * Version: 0.12.0
  * Plugin URL: https://github.com/Darklg/JavaScriptUtilities
  * JavaScriptUtilities Vanilla Fake Select may be freely distributed under the MIT license.
  */
@@ -26,6 +26,7 @@ function vanillaLazyLoading(options) {
         imgs_actionchildren,
         imgs,
         scrollTop = 0,
+        winWidth = window.innerWidth,
         timeoutImgPosition;
 
     /* Attributes */
@@ -37,6 +38,7 @@ function vanillaLazyLoading(options) {
         attrMainSrc = 'data-vllsrc',
         attrOffset = 'data-vlloffset',
         attrTarget = 'data-vlltarget',
+        attrResponsive = 'data-vllrespsrc',
         attrSrcLoaded = 'data-vllwaitforload',
         attrType = 'data-vlltype';
 
@@ -54,6 +56,7 @@ function vanillaLazyLoading(options) {
         scrollEvent();
         window.addEventListener('scroll', scrollEvent, 1);
         window.addEventListener('resize', timeoutImagesPosition, 1);
+        window.addEventListener('resize', scrollEvent, 1);
         for (var i = 0, len = imgs_actionchildren.length; i < len; i++) {
             imgs_actionchildren[i].addEventListener('mousemove', actionEventMouse, 1);
             imgs_actionchildren[i].addEventListener('touchstart', actionEvent, 1);
@@ -161,6 +164,7 @@ function vanillaLazyLoading(options) {
     }
 
     function setImagesPosition() {
+        winWidth = window.innerWidth;
         for (var i = 0, len = imgs_vll.length; i < len; i++) {
             if (!imgs_vll[i]) {
                 continue;
@@ -173,7 +177,8 @@ function vanillaLazyLoading(options) {
         var tmpOffset = img.el.getAttribute(attrOffset) ? parseInt(img.el.getAttribute(attrOffset), 10) : 0;
         img.type = img.el.getAttribute(attrType) ? img.el.getAttribute(attrType) : 'image';
         img.classname = img.el.getAttribute(attrClassname) ? img.el.getAttribute(attrClassname) : '';
-        img.src = img.el.getAttribute(attrSrc);
+        img.src = getSrcAttribute(img, attrSrc);
+        img.responsive = getIsResponsiveImage(img) !== false;
         img.top = img.el.getBoundingClientRect().top - tmpOffset;
         img.target = img.el;
         if (img.el.getAttribute(attrTarget)) {
@@ -192,6 +197,34 @@ function vanillaLazyLoading(options) {
         }
     }
 
+    function getIsResponsiveImage(img) {
+        var respAttr = img.el.getAttribute(attrResponsive);
+        if (!respAttr) {
+            return false;
+        }
+        respAttr = JSON.parse(respAttr);
+        if (typeof respAttr != 'object') {
+            return false;
+        }
+        return respAttr;
+    }
+
+    function getSrcAttribute(img, attrSrc) {
+        var respAttr = getIsResponsiveImage(img),
+            mainSrc = img.el.getAttribute(attrSrc);
+        if (attrSrc != attrMainSrc || !respAttr) {
+            return mainSrc;
+        }
+
+        for (var i = 0, len = respAttr.length; i < len; i++) {
+            if (isNumeric(respAttr[i][0]) && respAttr[i][0] < winWidth) {
+                mainSrc = respAttr[i][1];
+            }
+        }
+
+        return mainSrc;
+    }
+
     function loadItem(i) {
         // No image : stop script
         if (!imgs_vll[i]) {
@@ -203,12 +236,13 @@ function vanillaLazyLoading(options) {
         }
 
         loadImageAsync(imgs_vll[i]);
+        if (!imgs_vll[i].responsive) {
+            // Remove attribute
+            imgs_vll[i].el.removeAttribute(attrMainSrc);
 
-        // Remove attribute
-        imgs_vll[i].el.removeAttribute(attrMainSrc);
-
-        // Invalidate image
-        imgs_vll[i] = false;
+            // Invalidate image
+            imgs_vll[i] = false;
+        }
     }
 
     function loadImageAsync(img) {
@@ -265,6 +299,11 @@ function vanillaLazyLoading(options) {
 
         // Set image load
         img.src = url;
+    }
+
+    /* Thanks to http://www.neiland.net/blog/article/javascript-isnumeric/ */
+    function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
     }
 
     init();

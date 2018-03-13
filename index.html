@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <title>JavaScript Utilities - Vanilla Lazy Loading</title>
-<script src="js/vanilla-lazyloading.min.js?v=0.11.0"></script>
+<script src="js/vanilla-lazyloading.min.js?v=0.12.0"></script>
 <style>.outred{outline: 1px solid red;}</style>
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
@@ -11,6 +11,10 @@
 <h1>JavaScript Utilities - Vanilla Lazy Loading</h1>
 <!-- Basic item -->
 <img data-vllsrc="images/image-1.jpg" alt="" />
+<div style="height:1000px;"></div>
+<!-- Basic item -->
+<div>This image will change when window width is below 1200px</div>
+<img data-vllsrc="images/image-1.jpg" data-vllrespsrc='[[0,"images/image-2.jpg"],[1200,"images/image-1.jpg"]]' alt="" />
 <div style="height:1000px;"></div>
 <!-- Background with offset -->
 <div style="height:100px;background-color:#E0E0E0;line-height:100px;">100px</div>
